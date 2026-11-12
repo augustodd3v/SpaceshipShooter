@@ -56,4 +56,12 @@ public class Player {
             playerY = 800 - 20;
         }
     }
+
+    public int getPlayerX() {
+        return playerX;
+    }
+
+    public int getPlayerY() {
+        return playerY;
+    }
 }

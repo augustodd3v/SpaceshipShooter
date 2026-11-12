@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,10 +12,11 @@ import javax.swing.Timer;
 
 public class GPanel extends JPanel implements ActionListener{
 
+    private ArrayList<Bullet> bullets = new ArrayList<>();
     private Player player;
     private Timer gameTimer;
 
-    private boolean upPressed, downPressed, leftPressed, rightPressed;
+    private boolean upPressed, downPressed, leftPressed, rightPressed, xPressed;
 
     public GPanel(Player player) {
         this.player = player;
@@ -38,6 +41,10 @@ public class GPanel extends JPanel implements ActionListener{
                 if (key == KeyEvent.VK_RIGHT) {
                     rightPressed = true;
                 }
+                
+                if (key == KeyEvent.VK_X) {
+                    xPressed = true;
+                }
             }
 
             @Override
@@ -55,6 +62,11 @@ public class GPanel extends JPanel implements ActionListener{
                 }
                 if (key == KeyEvent.VK_RIGHT) {
                     rightPressed = false;
+                }
+
+                if (key == KeyEvent.VK_X) {
+                    xPressed = false;
+                    bullets.add(new Bullet(player.getPlayerX() + 7, player.getPlayerY(), 10));
                 }
             }
         });
@@ -78,6 +90,16 @@ public class GPanel extends JPanel implements ActionListener{
             player.moveRight();
         }
 
+        Iterator<Bullet> iterator = bullets.iterator();
+        while (iterator.hasNext()) {
+            Bullet b = iterator.next();
+            b.bulletShoot();
+
+            if (!b.isActive()) {
+                iterator.remove();
+            }
+        }
+
         repaint();
     }
 
@@ -90,6 +112,10 @@ public class GPanel extends JPanel implements ActionListener{
 
         if (player != null) {
             player.drawPlayer(g);
+        }
+
+        for (Bullet b : bullets) {
+            b.drawBullet(g);
         }
     }
 }
